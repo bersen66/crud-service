@@ -1,0 +1,63 @@
+components_manager:
+  coro_pool:
+    initial_size: 5000
+    max_size: 1000000
+
+  task_processors:
+
+    main-task-processor:
+      worker_threads: 4
+      thread_name: "main-worker"
+
+    fs-task-processor:
+      worker_threads: 4
+      thread_name: "fs-worker"
+
+  default_task_processor: main-task-processor
+
+
+
+  components:
+
+    server:
+      listener:
+        port: 8080
+        task_processor: main-task-processor
+
+    logging:
+      fs-task-processor: fs-task-processor
+      loggers:
+        default:
+          file_path: '@stderr'
+          level: info
+          overflow_behavior: discard
+
+
+    tracer:
+      service-name: CRUD-datamart
+
+
+    dynamic-config:
+      fs-cache-path: ''
+    dynamic-config-fallbacks:
+      fallback-path: dynamic_config.json
+
+    handle-create:
+      path: /create
+      method: POST
+      task_processor: main-task-processor
+
+    handle-read:
+      path: /read
+      method: GET
+      task_processor: main-task-processor
+
+    handle-update:
+      path: /update
+      method: UPDATE
+      task_processor: main-task-processor
+
+    handle-delete:
+      path: /delete
+      method: DELETE
+      task_processor: main-task-processor
