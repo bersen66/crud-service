@@ -1,63 +1,72 @@
 components_manager:
-  coro_pool:
-    initial_size: 5000
-    max_size: 1000000
+    coro_pool:
+        initial_size: 5000
+        max_size: 1000000
 
-  task_processors:
+    task_processors:
 
-    main-task-processor:
-      worker_threads: 4
-      thread_name: "main-worker"
+        main-task-processor:
+            worker_threads: 4
+            thread_name: "main-worker"
 
-    fs-task-processor:
-      worker_threads: 4
-      thread_name: "fs-worker"
+        fs-task-processor:
+            worker_threads: 10
+            thread_name: "fs-worker"
 
-  default_task_processor: main-task-processor
+    default_task_processor: main-task-processor
 
+    components:
 
+        server:
+            listener:
+                port: 8080
+                task_processor: main-task-processor
 
-  components:
-
-    server:
-      listener:
-        port: 8080
-        task_processor: main-task-processor
-
-    logging:
-      fs-task-processor: fs-task-processor
-      loggers:
-        default:
-          file_path: '@stderr'
-          level: info
-          overflow_behavior: discard
+        logging:
+            fs-task-processor: fs-task-processor
+            loggers:
+                default:
+                    file_path: '@stderr'
+                    level: error
+                    overflow_behavior: discard
 
 
-    tracer:
-      service-name: CRUD-datamart
+        tracer:
+            service-name: CRUD-datamart
 
 
-    dynamic-config:
-      fs-cache-path: ''
-    dynamic-config-fallbacks:
-      fallback-path: dynamic_config.json
+        dynamic-config:
+            fs-cache-path: ''
+        dynamic-config-fallbacks:
+            fallback-path: dynamic_config.json
 
-    handle-create:
-      path: /create
-      method: POST
-      task_processor: main-task-processor
+        testsuite-support: {}
 
-    handle-read:
-      path: /read
-      method: GET
-      task_processor: main-task-processor
+        dns-client:
+            fs-task-processor: fs-task-processor
 
-    handle-update:
-      path: /update
-      method: UPDATE
-      task_processor: main-task-processor
+        dbb:
+            dbconnection: 'postgresql://ortur:beoboba@localhost:5432/dbb'
+            blocking_task_processor: fs-task-processor
+            dns_resolver: async
+            sync-start: true
 
-    handle-delete:
-      path: /delete
-      method: DELETE
-      task_processor: main-task-processor
+        handle-create:
+            path: /create/{name}
+            method: POST
+            task_processor: fs-task-processor
+
+        handle-read:
+            path: /read/{id}
+            method: GET
+            task_processor: main-task-processor
+
+        handle-update:
+            path: /update/{id}/{new_name}
+            method: PUT
+            task_processor: main-task-processor
+
+        handle-delete:
+            path: /delete/{id}
+            method: DELETE
+            task_processor: main-task-processor

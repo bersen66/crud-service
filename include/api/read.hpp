@@ -1,18 +1,24 @@
 #pragma once
 
+#include "userver/storages/postgres/postgres.hpp"
 #include "userver/server/handlers/http_handler_base.hpp"
 
-namespace api
-{
 
-class Read final : public userver::server::handlers::HttpHandlerBase
-{
-public:
-  static constexpr std::string_view kName = "handle-read";
-  using userver::server::handlers::HttpHandlerBase::HttpHandlerBase;
+namespace api::service {
 
-  std::string HandleRequestThrow(const userver::server::http::HttpRequest& request,
-                                 userver::server::request::RequestContext& context) const override;
-};
+    class Read final : public userver::server::handlers::HttpHandlerBase {
+    public:
+        static constexpr std::string_view kName = "handle-read";
 
-} // namespace api
+        Read(const userver::components::ComponentConfig& config,
+             const userver::components::ComponentContext& context);
+
+        std::string HandleRequestThrow(
+                const userver::server::http::HttpRequest &request,
+                userver::server::request::RequestContext &context) const override;
+    private:
+        userver::storages::postgres::ClusterPtr pg_cluster;
+    };
+
+
+}  // namespace api::service

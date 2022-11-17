@@ -25,6 +25,7 @@ add_library(
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_link_libraries(CRUD PUBLIC userver-core)
+target_link_libraries(CRUD PUBLIC userver-postgresql)
 target_link_libraries(${PROJECT_NAME} PRIVATE CRUD)
 
 
