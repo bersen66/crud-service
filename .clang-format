@@ -1,6 +1,6 @@
 Language: Cpp
 
-BasedOnStyle: Microsoft
+BasedOnStyle: Google
 
 ReferenceAlignment: Left
 BreakInheritanceList: BeforeComma

@@ -5,19 +5,19 @@
 
 namespace api::service {
 
-    class Update final : public userver::server::handlers::HttpHandlerBase {
-    public:
-        static constexpr std::string_view kName = "handle-update";
+class Update final : public userver::server::handlers::HttpHandlerBase {
+public:
+  static constexpr std::string_view kName = "handle-update";
 
-        Update(const userver::components::ComponentConfig &config,
-               const userver::components::ComponentContext &context);
+  Update(const userver::components::ComponentConfig& config,
+         const userver::components::ComponentContext& context);
 
-        std::string HandleRequestThrow(
-                const userver::server::http::HttpRequest &request,
-                userver::server::request::RequestContext &context) const override;
+  std::string HandleRequestThrow(
+      const userver::server::http::HttpRequest& request,
+      userver::server::request::RequestContext& context) const override;
 
-    private:
-        userver::storages::postgres::ClusterPtr pg_cluster;
-    };
+private:
+  userver::storages::postgres::ClusterPtr pg_cluster;
+};
 
 }  // namespace api::service
